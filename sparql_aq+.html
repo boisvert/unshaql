@@ -152,8 +152,10 @@ function request(id) {
             if (xhr.status == 404) {
                 alert('File not found');
             }
-            if (xhr.status == 200) {
-                document.getElementById("sparql").value = cleanContents(xhr.responseText);
+            if (xhr.status == 200 || xhr.status==304) {
+                var d = cleanContents(xhr.responseText);
+                // alert(d);
+                editor.setValue(d);
             }
         }
     }
@@ -170,8 +172,7 @@ function cleanContents(data) {
     // take the file contents from a JSON response
     // then decode the base64 encoding of it.
     
-    encoded = JSON.parse(data).content;
-    decoded = atob(encoded); // base64 to ascii
+    encoded = JSON.parse(data).content; decoded = atob(encoded); // base64 to ascii
     return decoded;
 }
 
