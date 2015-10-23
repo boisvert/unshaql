@@ -1,0 +1,20 @@
+select ?sensor, ?lat, ?long, ?timestamp, ?observationValue
+where {
+  ?observation <http://purl.oclc.org/NET/ssnx/ssn#hasValue> ?observationValue .
+  ?observation <http://purl.oclc.org/NET/ssnx/ssn#endTime> ?timestamp .
+  ?observation <uri://opensheffield.org/properties#sensor> ?sensor .
+  ?sensor <http://purl.oclc.org/NET/ssnx/ssn#MeasurementProperty> <http://dbpedia.org/resource/NO2> .
+  ?sensor <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?long .
+  ?sensor <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?lat .
+
+  {
+      select (max(?r) AS ?observation)
+      where {
+          ?r a <http://purl.oclc.org/NET/ssnx/ssn#ObservationValue> .
+          ?r <uri://opensheffield.org/properties#sensor> ?sensor .
+          ?r <http://purl.oclc.org/NET/ssnx/ssn#endTime> ?ts .  
+          FILTER ( xsd:dateTime(?ts) > xsd:dateTime('2015-01-01 00:00:00') )
+      }
+      GROUP BY ?sensor
+  }
+}

@@ -1,0 +1,7 @@
+select ?sensor (count(?observation) as ?totalObservations) (min(?endTime) as ?minEndTime) ( max(?endTime) as ?maxEndTime ) ( max(?observationValue) as ?maxObservedValue ) ( min(?observationValue) as ?minObservedValue ) ( avg(?observationValue) as ?avgObservedValue ) where {
+    ?sensor a <http://purl.oclc.org/NET/ssnx/ssn#SensingDevice>.
+    ?observation <uri://opensheffield.org/properties#sensor> ?sensor.
+    ?observation <http://purl.oclc.org/NET/ssnx/ssn#endTime> ?endTime .
+    ?observation <http://purl.oclc.org/NET/ssnx/ssn#hasValue> ?observationValue
+}
+GROUP BY (?sensor)

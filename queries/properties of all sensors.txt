@@ -1,0 +1,5 @@
+select ?sensor ?p ?o where {
+    ?sensor a <http://purl.oclc.org/NET/ssnx/ssn#SensingDevice> .
+    ?sensor ?p ?o
+}
+ORDER BY DESC(?sensor) DESC(?p)

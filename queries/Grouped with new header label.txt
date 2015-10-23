@@ -1,0 +1,16 @@
+select ?sensor, (max(?day) as ?day), (max(?hour) as ?hour), (avg(?observationValue) as ?observation), (max(?observationValue) as ?maxReading), (min(?observationValue) as ?minReading)
+where {
+  graph ?g {
+    ?s <uri://opensheffield.org/properties#sensor> ?sensor .
+    ?s a <http://purl.oclc.org/NET/ssnx/ssn#ObservationValue> .
+    ?s <http://purl.oclc.org/NET/ssnx/ssn#endTime> ?observationTime.
+    ?s <http://purl.oclc.org/NET/ssnx/ssn#hasValue> ?observationValue .
+    ?sensor <http://purl.oclc.org/NET/ssnx/ssn#MeasurementProperty> <http://dbpedia.org/resource/NO2>     .
+    BIND (bif:subseq( str( ?observationTime ),0,11) AS ?day) .
+    BIND (bif:subseq( str( ?observationTime ),11,13) AS ?hour) .
+    BIND (bif:subseq( str( ?observationTime ),0,13) AS ?dayhour) .
+    FILTER ( xsd:date(?observationTime) > xsd:date("2014-10-13") && xsd:date(?observationTime) <= xsd:date("2014-11-13") )  
+  }
+}
+GROUP BY ?sensor ?dayhour
+ORDER BY ?dayhour ?sensor

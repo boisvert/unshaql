@@ -1,0 +1,10 @@
+select ?sensor ?maxTimestamp ?sensorId ?lat ?long ?lastCheck where {
+  ?sensor a <http://purl.oclc.org/NET/ssnx/ssn#SensingDevice> .
+  ?sensor <uri://opensheffield.org/properties#sensorId> ?sensorId .
+  ?sensor <http://purl.oclc.org/NET/ssnx/ssn#onPlatform> "scc_air_quality" .
+  ?sensor <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?long .
+  ?sensor <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?lat .
+  ?sensor <uri://opensheffield.org/properties#lastCheck> ?lastCheck .
+  OPTIONAL { ?sensor <uri://opensheffield.org/properties#maxTimestamp> ?maxTimestamp } .
+}
+ORDER BY DESC(?sensor)

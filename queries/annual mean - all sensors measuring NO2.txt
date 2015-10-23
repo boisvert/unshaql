@@ -1,0 +1,14 @@
+select ?sensor, ?year, avg(?observationValue), max(?observationValue), min(?observationValue)
+where {
+  graph ?g {
+    ?s <uri://opensheffield.org/properties#sensor> ?sensor .
+    ?s a <http://purl.oclc.org/NET/ssnx/ssn#ObservationValue> .
+    ?s <http://purl.oclc.org/NET/ssnx/ssn#endTime> ?observationTime.
+    ?s <http://purl.oclc.org/NET/ssnx/ssn#hasValue> ?observationValue .
+    ?sensor <http://purl.oclc.org/NET/ssnx/ssn#MeasurementProperty> <http://dbpedia.org/resource/NO2> .
+    BIND (bif:subseq( str( ?observationTime ),0,4) AS ?year) .
+    FILTER ( ?observationValue > 0 )
+  }
+}
+GROUP BY ?sensor ?year
+ORDER BY ?year ?sensor

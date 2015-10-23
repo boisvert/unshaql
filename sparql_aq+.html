@@ -79,7 +79,7 @@ if (f = getParam("format")) {
   fElt.value = f;
 }
 
-if (id = getParam("pasteid")) {
+if (id = getParam("file")) {
   request(id);
 }
 
@@ -122,6 +122,7 @@ function val(name,value) {
 // intended to load files from pastebin, doesn't work
 
 
+// 
 function request(id) {
 
    // 1. Create XHR instance - Start
@@ -139,21 +140,36 @@ function request(id) {
 
     // 2. Define what to do when XHR feed you the response from the server - Start
     xhr.onreadystatechange = function () {
-	    // alert(xhr.readyState + " " + xhr.status + " " + xhr.responseText)
+        //alert(xhr.readyState + " " + xhr.status + " " + xhr.responseText)
         if (xhr.readyState === 4) {
-            if (xhr.status == 200 && xhr.status < 300) {
-                document.getElementById("sparql").value = xhr.responseText;
+            if (xhr.status == 404) {
+                alert('File not found');
+            }
+            if (xhr.status == 200) {
+                document.getElementById("sparql").value = cleanContents(xhr.responseText);
             }
         }
     }
     // 2. Define what to do when XHR feed you the response from the server - End
 
     // 3. Specify your action, location and Send to the server - Start 
-    xhr.open('POST', 'getbin.php');
+    xhr.open('GET', 'https://api.github.com/repos/boisvert/unshaql/contents/queries/'+id);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send(val("id",id));
+    xhr.send();
     // 3. Specify your action, location and Send to the server - End
 }
+
+function cleanContents(data) {
+    // take the file contents from a JSON response
+    // then decode the base64 encoding of it.
+    
+    encoded = JSON.parse(data).content;
+    
+    decoded = btoa(encoded); // base64 to ascii
+    
+    return decoded;
+}
+
 
 // query string parsing thanks to jolly.exe - http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
 function getParam(name) {
