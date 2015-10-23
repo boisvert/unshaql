@@ -11,7 +11,14 @@
 <h1>Query the Air Quality+ data repository using SPARQL</h1>
 
 <p>
-More SPARQL examples at <a href="https://github.com/BetterWithDataSociety/ShefAirQualityAgent/wiki/Sample-SPARQL">AQ+ on github</a>
+Speedy API guide:<ul>
+<li>Set the return format: ?format=&lt;value&gt;, e.g. <a href="sparql_aq+.html?format=application/sparql-results%2Bjson">sparql_aq+.html?format=application/sparql-results%2Bjson</a>
+<li>To load a saved query, use ?file=&lt;filename&gt;, e.g. <a href="sparql_aq+.html?file=specific%20sensor.txt">sparql_aq+.html?file=specific%20sensor.txt</a>
+</ul></p>
+
+<p>
+More SPARQL examples at <a href="https://github.com/BetterWithDataSociety/ShefAirQualityAgent/wiki/Sample-SPARQL">AQ+ on github</a>,
+and a list of <a href="https://github.com/boisvert/unshaql/tree/master/queries">queries that have been saved.</a>
 </p>
 
 <p>
@@ -164,12 +171,9 @@ function cleanContents(data) {
     // then decode the base64 encoding of it.
     
     encoded = JSON.parse(data).content;
-    
-    decoded = btoa(encoded); // base64 to ascii
-    
+    decoded = atob(encoded); // base64 to ascii
     return decoded;
 }
-
 
 // query string parsing thanks to jolly.exe - http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
 function getParam(name) {
