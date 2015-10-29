@@ -1,6 +1,7 @@
 <!doctype html>
 <meta charset="utf-8" />
 
+<script src="ask_github.js"></script>
 <script src="http://codemirror.net/lib/codemirror.js"></script>
 <script src="http://codemirror.net/addon/edit/matchbrackets.js"></script>
 <script src="http://codemirror.net/mode/sparql/sparql.js"></script>
@@ -87,7 +88,7 @@ if (f = getParam("format")) {
 }
 
 if (id = getParam("file")) {
-  request(id);
+  getSPARQLFile(id, function(resp) { editor.setValue(getContents(resp)); });
 }
 
 // public functions
@@ -123,57 +124,6 @@ function getURL() {
 // make name-value pair for a query string
 function val(name,value) {
    return name+'='+encodeURIComponent(value);
-}
-
-// Cross-site HTML5 file loading courtesy of HTML5Rocks (http://www.html5rocks.com/en/tutorials/cors/)
-// intended to load files from pastebin, doesn't work
-
-
-// 
-function request(id) {
-
-   // 1. Create XHR instance - Start
-    var xhr;
-    if (window.XMLHttpRequest) {
-        xhr = new XMLHttpRequest();
-    }
-    else if (window.ActiveXObject) {
-        xhr = new ActiveXObject("Msxml2.XMLHTTP");
-    }
-    else {
-        throw new Error("Ajax is not supported by this browser");
-    }
-    // 1. Create XHR instance - End
-
-    // 2. Define what to do when XHR feed you the response from the server - Start
-    xhr.onreadystatechange = function () {
-        //alert(xhr.readyState + " " + xhr.status + " " + xhr.responseText)
-        if (xhr.readyState === 4) {
-            if (xhr.status == 404) {
-                alert('File not found');
-            }
-            if (xhr.status == 200 || xhr.status==304) {
-                var d = cleanContents(xhr.responseText);
-                // alert(d);
-                editor.setValue(d);
-            }
-        }
-    }
-    // 2. Define what to do when XHR feed you the response from the server - End
-
-    // 3. Specify your action, location and Send to the server - Start 
-    xhr.open('GET', 'https://api.github.com/repos/boisvert/unshaql/contents/queries/'+id);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send();
-    // 3. Specify your action, location and Send to the server - End
-}
-
-function cleanContents(data) {
-    // take the file contents from a JSON response
-    // then decode the base64 encoding of it.
-    
-    encoded = JSON.parse(data).content; decoded = atob(encoded); // base64 to ascii
-    return decoded;
 }
 
 // query string parsing thanks to jolly.exe - http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
