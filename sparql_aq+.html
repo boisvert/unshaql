@@ -13,8 +13,9 @@
 
 <p>
 Speedy API guide:<ul>
-<li>Set the return format: ?format=&lt;value&gt;, e.g. <a href="sparql_aq+.html?format=application/sparql-results%2Bjson">sparql_aq+.html?format=application/sparql-results%2Bjson</a>
-<li>To load a saved query, use ?file=&lt;filename&gt;, e.g. <a href="sparql_aq+.html?file=specific%20sensor.txt">sparql_aq+.html?file=specific%20sensor.txt</a>
+<li>Set the return format: ?format=<i>value</i>, e.g. <a href="sparql_aq+.html?format=application/sparql-results%2Bjson">sparql_aq+.html?format=application/sparql-results%2Bjson</a>
+<li>To load a saved query, use ?gist=<i>id</i>&file=<i>filename</i>, e.g. <a href="sparql_aq+.html?gist=c2fba1f0cf68d6b3b0b8&file=specific%20sensor.sparql">sparql_aq+.html?gist=c2fba1f0cf68d6b3b0b8&file=specific%20sensor.sparql</a></li>
+<li>There is no support for saving queries from here (yet). Save them in github gist, then keep a note of the file's name and the gist id to access the query as shown above.
 </ul></p>
 
 <p>
@@ -83,12 +84,14 @@ ORDER BY ?dayhour ?sensor
 
 // service parameters
 if (f = getParam("format")) {
-  var fElt = document.getElementById('format');
-  fElt.value = f;
+    var fElt = document.getElementById('format');
+    fElt.value = f;
 }
 
-if (id = getParam("file")) {
-  getSPARQLFile(id, function(resp) { editor.setValue(getContents(resp)); });
+if (id = getParam("gist")) {
+    if (f = getParam("file")) {
+        getSPARQLFile(id, function(resp) { editor.setValue(getContents(resp, f)); });
+    }
 }
 
 // public functions

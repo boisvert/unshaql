@@ -1,7 +1,7 @@
 
 // load files from github
 function getSPARQLFile(id,callback) {
-    var URL = 'https://api.github.com/repos/boisvert/unshaql/contents/queries/'+id;
+    var URL = 'https://api.github.com/gists/'+id;
     var xhr = xrequest('GET', URL, callback);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.send();
@@ -44,9 +44,9 @@ function xrequest(method, url, callback) {
 
 }
 
-function getContents(data) {
+function getContents(data, fileName) {
     // take the file contents from a JSON response
     // then decode the base64 encoding of it.
-    
-    return atob(data.content); // base64 to ascii
+   
+    return data.files[fileName].content; // base64 to ascii: use atob()
 }
