@@ -1,7 +1,0 @@
-select ?sensor, max(?timestamp)
-where {
-    ?s <uri://opensheffield.org/properties#sensor> ?sensor .
-    ?s a <http://purl.oclc.org/NET/ssnx/ssn#ObservationValue> .
-    ?s <http://purl.oclc.org/NET/ssnx/ssn#endTime> ?timestamp .
-}
-GROUP BY ?sensor

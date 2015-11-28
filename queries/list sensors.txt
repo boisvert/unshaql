@@ -1,4 +1,0 @@
-select ?sensor where {
-    ?sensor a <http://purl.oclc.org/NET/ssnx/ssn#SensingDevice>
-}
-ORDER BY DESC(?sensor)

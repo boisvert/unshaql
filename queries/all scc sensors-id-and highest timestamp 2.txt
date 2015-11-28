@@ -1,5 +1,0 @@
-select ?sensor ?measures where {
-  ?sensor <http://purl.oclc.org/NET/ssnx/ssn#MeasurementProperty> ?measures .
-  ?sensor a <http://purl.oclc.org/NET/ssnx/ssn#SensingDevice>
-}
-order by DESC(?sensor) DESC(?measures)

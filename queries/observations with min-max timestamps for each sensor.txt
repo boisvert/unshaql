@@ -1,6 +1,0 @@
-select ?sensor (count(?observation) as ?totalObservations) (min(?endTime) as ?minEndTime) ( max(?endTime) as ?maxEndTime ) where {
-    ?sensor a <http://purl.oclc.org/NET/ssnx/ssn#SensingDevice>.
-    ?observation <uri://opensheffield.org/properties#sensor> ?sensor.
-    ?observation <http://purl.oclc.org/NET/ssnx/ssn#endTime> ?endTime 
-}
-GROUP BY (?sensor)
