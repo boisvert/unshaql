@@ -1,3 +1,21 @@
+<?php
+include("oauth_data.php");
+
+$state = generateRandomString(20);
+$_SESSION["oauth_state"] = $state;
+
+function generateRandomString($length = 10) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
+
+?>
+
 <!doctype html>
 <meta charset="utf-8" />
 
@@ -15,7 +33,17 @@
 Speedy API guide:<ul>
 <li>Set the return format: ?format=<i>value</i>, e.g. <a href="sparql_aq+.html?format=application/sparql-results%2Bjson">sparql_aq+.html?format=application/sparql-results%2Bjson</a>
 <li>To load a saved query, use ?gist=<i>id</i>&file=<i>filename</i>, e.g. <a href="sparql_aq+.html?gist=c2fba1f0cf68d6b3b0b8&file=specific%20sensor.sparql">sparql_aq+.html?gist=c2fba1f0cf68d6b3b0b8&file=specific%20sensor.sparql</a></li>
-<li>There is no support for saving queries from here (yet). Save them in github gist, then keep a note of the file's name and the gist id to access the query as shown above.
+<li>There is no support for saving queries from here (yet). Save them in github gist, then keep a note of the file's name and the gist id to access the query.
+<form action="<?php echo $gui_uri; ?>" target="_blank" method="get">
+    <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
+    <input type="hidden" name="scope" value="<?php echo $scope; ?>" />
+    <input type="hidden" name="redirect_uri" value="<?php echo $redirect_uri; ?>"/>
+    <input type="hidden" name="state" value="<?php echo $state; ?>" />
+    
+    <input type="submit" value="Login github" />
+</form>
+</li>
+
 </ul></p>
 
 <p>
