@@ -5,7 +5,7 @@ include("oauth_data.php");
 
 $state = $_SESSION["oauth_state"];
 
-if ($_GET["state"] == $_SESSION["oauth_state"])
+if ($_REQUEST["state"] == $state)
 {
     echo "Hello, authorised user<br />";
 
@@ -13,8 +13,9 @@ if ($_GET["state"] == $_SESSION["oauth_state"])
     // put token in session
     $result = get_token();
 
-    $_SESSION['oauth_token'] = $result["token"];
+    $_SESSION['oauth_token'] = $result["access_token"];
     $_SESSION['oauth_scope'] = $result["scope"];
+
 }
 else {
     echo "Not you";
@@ -50,5 +51,10 @@ function get_token() {
     return $result;
 
 }
-
 ?>
+
+<button onclick="window.close();">Done</button>
+
+<script>
+   opener.showUser();
+</script>

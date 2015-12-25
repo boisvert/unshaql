@@ -13,37 +13,37 @@ function generateRandomString($length = 10) {
     }
     return $randomString;
 }
-
 ?>
 
 <!doctype html>
 <meta charset="utf-8" />
 
-<script src="ask_github.js"></script>
-<script src="http://codemirror.net/lib/codemirror.js"></script>
-<script src="http://codemirror.net/addon/edit/matchbrackets.js"></script>
-<script src="http://codemirror.net/mode/sparql/sparql.js"></script>
-<link rel="stylesheet" href="http://codemirror.net/lib/codemirror.css">
+<head>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="ask_github.js"></script>
+    <script src="http://codemirror.net/lib/codemirror.js"></script>
+    <script src="http://codemirror.net/addon/edit/matchbrackets.js"></script>
+    <script src="http://codemirror.net/mode/sparql/sparql.js"></script>
+    <link rel="stylesheet" href="http://codemirror.net/lib/codemirror.css">
+    <title>Query the Air Quality+ data repository using SPARQL</title>
+</head>
 
-<title>Query the Air Quality+ data repository using SPARQL</title>
+<body>
 
-<h1>Query the Air Quality+ data repository using SPARQL</h1>
+<h1>Query the Air Quality+ data repository using SPARQL
+<div id="user">
+    <button onclick="login_gui();">
+        login github
+    </button>
+</div>
+</h1>
 
 <p>
-Speedy API guide:<ul>
-<li>Set the return format: ?format=<i>value</i>, e.g. <a href="sparql_aq+.html?format=application/sparql-results%2Bjson">sparql_aq+.html?format=application/sparql-results%2Bjson</a>
-<li>To load a saved query, use ?gist=<i>id</i>&file=<i>filename</i>, e.g. <a href="sparql_aq+.html?gist=c2fba1f0cf68d6b3b0b8&file=specific%20sensor.sparql">sparql_aq+.html?gist=c2fba1f0cf68d6b3b0b8&file=specific%20sensor.sparql</a></li>
-<li>There is no support for saving queries from here (yet). Save them in github gist, then keep a note of the file's name and the gist id to access the query.
-<form action="<?php echo $gui_uri; ?>" target="_blank" method="get">
-    <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
-    <input type="hidden" name="scope" value="<?php echo $scope; ?>" />
-    <input type="hidden" name="redirect_uri" value="<?php echo $redirect_uri; ?>"/>
-    <input type="hidden" name="state" value="<?php echo $state; ?>" />
-    
-    <input type="submit" value="Login github" />
-</form>
-</li>
-
+Speedy API guide:
+<ul>
+    <li>Set the return format: ?format=<i>value</i>, e.g. <a href="sparql_aq+.html?format=application/sparql-results%2Bjson">sparql_aq+.html?format=application/sparql-results%2Bjson</a>
+    <li>To load a saved query, use ?gist=<i>id</i>&file=<i>filename</i>, e.g. <a href="sparql_aq+.html?gist=c2fba1f0cf68d6b3b0b8&file=specific%20sensor.sparql">sparql_aq+.html?gist=c2fba1f0cf68d6b3b0b8&file=specific%20sensor.sparql</a></li>
+    <li>There is no support for saving queries from here (yet). Save them in github gist, then keep a note of the file's name and the gist id to access the query</li>
 </ul></p>
 
 <p>
@@ -110,6 +110,20 @@ ORDER BY ?dayhour ?sensor
 
 <script>
 
+function login_gui() {
+    var page = '<?php echo "$gui_uri?client_id=$client_id&scope=$scope&redirect_uri=$redirect_uri&state=$state"; ?>';
+    window.open(page,"Login Github","menubar=no, status=no, scrollbars=no, width=550, height=480");
+}
+
+function showUser() {
+    $.get("proxy.php?service=user", function(data, status){
+        if (status=="success") {
+            var inner = '<img src="'+data.avatar_url+'" width="20" />'+data.login;
+            $("#user").html(inner);
+        }
+    });
+}
+
 // service parameters
 if (f = getParam("format")) {
     var fElt = document.getElementById('format');
@@ -166,3 +180,5 @@ function getParam(name) {
 }
 
 </script>
+</body>
+</html>
