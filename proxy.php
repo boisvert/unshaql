@@ -5,14 +5,29 @@ include("oauth_data.php");
 
 header('Content-Type: application/json');
 
+$ans = "";
+
 if (isset($_SESSION['oauth_token'])) {
     $s = $_GET["service"];
-    $ans = request_tunnel($s);
-    echo $ans;
+    if ($s == "logout") {
+        $_SESSION['oauth_token'] = "";
+        $_SESSION['oauth_scope'] = "";
+        $ans='{"success":"logout"}';
+    }
+    else
+       $ans = request_tunnel($s);
+
+    // we need to also return the status of the answer, e.g. incorrect or out of date token
+    // if token is out of date, should this page attempt to go and get another?
+
 }
 else {
-    echo '{"error": "no token"}';
+    // need an error status here
+    // code 40x??
+    $ans = '{"error": "no token"}';
 }
+
+echo $ans;
 
 // rewrite to request token
 // should some curl wrapper go in a util library? This is the second page that needs curl.

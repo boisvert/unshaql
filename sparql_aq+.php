@@ -30,19 +30,19 @@ function generateRandomString($length = 10) {
 
 <body>
 
-<h1>Query the Air Quality+ data repository using SPARQL
+<h1>Query the Air Quality+ data repository using SPARQL</h1>
 <div id="user">
     <button onclick="login_gui();">
         login github
     </button>
 </div>
-</h1>
+
 
 <p>
 Speedy API guide:
 <ul>
-    <li>Set the return format: ?format=<i>value</i>, e.g. <a href="sparql_aq+.html?format=application/sparql-results%2Bjson">sparql_aq+.html?format=application/sparql-results%2Bjson</a>
-    <li>To load a saved query, use ?gist=<i>id</i>&file=<i>filename</i>, e.g. <a href="sparql_aq+.html?gist=c2fba1f0cf68d6b3b0b8&file=specific%20sensor.sparql">sparql_aq+.html?gist=c2fba1f0cf68d6b3b0b8&file=specific%20sensor.sparql</a></li>
+    <li>Set the return format: ?format=<i>value</i>, e.g. <a href="sparql_aq+.php?format=application/sparql-results%2Bjson">sparql_aq+.html?format=application/sparql-results%2Bjson</a>
+    <li>To load a saved query, use ?gist=<i>id</i>&file=<i>filename</i>, e.g. <a href="sparql_aq+.php?gist=c2fba1f0cf68d6b3b0b8&file=specific%20sensor.sparql">sparql_aq+.html?gist=c2fba1f0cf68d6b3b0b8&file=specific%20sensor.sparql</a></li>
     <li>There is no support for saving queries from here (yet). Save them in github gist, then keep a note of the file's name and the gist id to access the query</li>
 </ul></p>
 
@@ -110,6 +110,14 @@ ORDER BY ?dayhour ?sensor
 
 <script>
 
+// check behaviour
+$(document).ready(showUser);
+// when previously logged in, showUser would find the token
+// the remainder is unclear.
+// If the token is out of date, login GUI should get straight to authorisation which self closes.
+// if not logging in correctly, or never logged in, the page should leave the login button
+// without a message  - not disrupting the work flow?
+
 function login_gui() {
     var page = '<?php echo "$gui_uri?client_id=$client_id&scope=$scope&redirect_uri=$redirect_uri&state=$state"; ?>';
     window.open(page,"Login Github","menubar=no, status=no, scrollbars=no, width=550, height=480");
@@ -117,8 +125,20 @@ function login_gui() {
 
 function showUser() {
     $.get("proxy.php?service=user", function(data, status){
+        console.log("data: "+JSON.stringify(data)+"\nStatus: "+status);
+        if (status=="success" && !(data.error)) {
+            var inner = '<img src="'+data.avatar_url+'" width="20" /> '+data.login+'( <div id="out">logout</div>)';
+            $("#user").html(inner);
+            $("#out").click(logout);
+        }
+    });
+}
+
+function logout() {
+    $.get("proxy.php?service=logout", function(data, status){
+        console.log("data: "+JSON.stringify(data)+"\nStatus: "+status);
         if (status=="success") {
-            var inner = '<img src="'+data.avatar_url+'" width="20" />'+data.login;
+            var inner = '<button onclick="login_gui();">login github</button>';
             $("#user").html(inner);
         }
     });

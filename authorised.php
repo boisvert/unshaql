@@ -1,4 +1,4 @@
-<?
+<?php
 // this is loaded after remote login
 
 include("oauth_data.php");
@@ -7,18 +7,28 @@ $state = $_SESSION["oauth_state"];
 
 if ($_REQUEST["state"] == $state)
 {
-    echo "Hello, authorised user<br />";
-
     // send for token
     // put token in session
     $result = get_token();
 
     $_SESSION['oauth_token'] = $result["access_token"];
     $_SESSION['oauth_scope'] = $result["scope"];
-
+?>
+<script>
+   opener.showUser();
+   window.close();
+</script>
+<?php
 }
 else {
-    echo "Not you";
+    // behaviour to refine
+    // if the "no login" is clear, then the window self-closing is enough (no message or button)
+?>
+Sorry, you are not logged in. <br />
+
+<button onclick="window.close();">Close</button>
+
+<?php
 }
 
 // rewrite to request token
@@ -49,12 +59,5 @@ function get_token() {
     parse_str($response, $result);
 
     return $result;
-
 }
 ?>
-
-<button onclick="window.close();">Done</button>
-
-<script>
-   opener.showUser();
-</script>
